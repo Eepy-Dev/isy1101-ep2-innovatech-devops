@@ -34,3 +34,15 @@ docker volume ls
 - Backend despachos: `8081`
 - MySQL: `3306`, solo interno al backend
 
+## Secrets requeridos en GitHub Actions
+
+- `DOCKERHUB_USERNAME`
+- `DOCKERHUB_TOKEN`
+- `EC2_USER`
+- `EC2_SSH_KEY`
+- `FRONTEND_PUBLIC_IP`
+- `BACKEND_PRIVATE_IP`
+- `MYSQL_ROOT_PASSWORD`
+- `MYSQL_DATABASE`
+- `MYSQL_USER`
+- `MYSQL_PASSWORD`
