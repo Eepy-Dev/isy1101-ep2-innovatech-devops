@@ -1,0 +1,10 @@
+services:
+  frontend-despacho:
+    image: ${DOCKERHUB_USERNAME}/frontend-despacho:latest
+    container_name: frontend-despacho
+    restart: unless-stopped
+    environment:
+      BACKEND_HOST: ${BACKEND_HOST}
+    ports:
+      - "80:8080"
+

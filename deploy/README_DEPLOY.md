@@ -1,0 +1,36 @@
+# Despliegue EP2 en AWS Academy
+
+## Frontend EC2
+
+La instancia frontend esta en subred publica y expone solo HTTP.
+
+```bash
+mkdir -p ~/ep2
+cd ~/ep2
+cp frontend.env.example .env
+docker compose --env-file .env -f docker-compose.frontend.yml pull
+docker compose --env-file .env -f docker-compose.frontend.yml up -d
+docker ps
+```
+
+## Backend EC2
+
+La instancia backend esta en subred privada. Ejecuta los dos microservicios Spring Boot y MySQL con volumen nombrado.
+
+```bash
+mkdir -p ~/ep2
+cd ~/ep2
+cp backend.env.example .env
+docker compose --env-file .env -f docker-compose.backend.yml pull
+docker compose --env-file .env -f docker-compose.backend.yml up -d
+docker ps
+docker volume ls
+```
+
+## Puertos
+
+- Frontend: `80`
+- Backend ventas: `8080`
+- Backend despachos: `8081`
+- MySQL: `3306`, solo interno al backend
+

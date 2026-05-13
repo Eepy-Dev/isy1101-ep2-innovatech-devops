@@ -1,0 +1,85 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-ep2-local
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: innovatech
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend-ventas:
+    build:
+      context: ./back-Ventas_SpringBoot/Springboot-API-REST
+    container_name: backend-ventas-local
+    restart: unless-stopped
+    environment:
+      DB_ENDPOINT: mysql
+      DB_PORT: 3306
+      DB_NAME: innovatech
+      DB_USERNAME: appuser
+      DB_PASSWORD: apppassword
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - backend-network
+      - frontend-network
+
+  backend-despachos:
+    build:
+      context: ./back-Despachos_SpringBoot/Springboot-API-REST-DESPACHO
+    container_name: backend-despachos-local
+    restart: unless-stopped
+    environment:
+      DB_ENDPOINT: mysql
+      DB_PORT: 3306
+      DB_NAME: innovatech
+      DB_USERNAME: appuser
+      DB_PASSWORD: apppassword
+      SERVER_PORT: 8081
+    ports:
+      - "8081:8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - backend-network
+      - frontend-network
+
+  frontend-despacho:
+    build:
+      context: ./front_despacho
+    container_name: frontend-despacho-local
+    restart: unless-stopped
+    environment:
+      BACKEND_HOST: host.docker.internal
+    ports:
+      - "80:8080"
+    depends_on:
+      - backend-ventas
+      - backend-despachos
+    networks:
+      - frontend-network
+
+volumes:
+  mysql_data:
+
+networks:
+  backend-network:
+  frontend-network:
